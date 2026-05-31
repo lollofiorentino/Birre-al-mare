@@ -7,14 +7,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #151210;         /* Fondo scuro e caldo */
-            --card: #221c19;       /* Colore dei blocchi principali */
-            --primary: #d4a373;    /* Ambra / Oro caldo per elementi principali */
-            --primary-hover: #b98a5c;
-            --text: #f4f1de;       /* Testo chiaro crema */
-            --text-muted: #a0938a; /* Testo secondario */
-            --border: #3d322c;
-            --row-bg: #2d2420;
+            --bg: #061a1e;         /* Sfondo color petrolio scurissimo */
+            --card: #0d2c33;       /* Contenitore petrolio */
+            --primary: #2bbba1;    /* Verde acqua / Teal brillante */
+            --primary-hover: #20947f;
+            --text: #e8f7f5;       /* Testo chiaro a contrasto */
+            --text-muted: #8fbab3; /* Testo secondario */
+            --border: #1c4952;
+            --row-bg: #12363e;
+            --danger: #e06c75;
+            --danger-hover: #be555d;
         }
         body {
             font-family: 'Alegreya', serif;
@@ -47,28 +49,28 @@
             font-size: 0.95em;
             line-height: 1.5;
         }
-        input, button {
+        input, select, button {
             font-family: 'Alegreya', serif;
             padding: 12px;
             margin: 5px 0;
             border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 16px;
-            background-color: #1a1512;
+            background-color: #081e23;
             color: var(--text);
             box-sizing: border-box;
         }
-        input:focus {
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
         }
-        input::placeholder {
+        input::placeholder, select::placeholder {
             font-family: 'Alegreya', serif;
-            color: #6d5c54;
+            color: #55878d;
         }
         button {
             background-color: var(--primary);
-            color: #151210;
+            color: #061a1e;
             font-weight: 700;
             border: none;
             cursor: pointer;
@@ -84,7 +86,7 @@
             display: flex;
             gap: 10px;
         }
-        .flex-row input {
+        .flex-row input, .flex-row select {
             flex: 1;
         }
         .recent-container {
@@ -105,7 +107,7 @@
             justify-content: center;
         }
         .chip-btn {
-            background-color: #2d2420;
+            background-color: #12363e;
             color: var(--primary);
             border: 1px solid var(--border);
             padding: 6px 12px;
@@ -115,7 +117,7 @@
         }
         .chip-btn:hover {
             background-color: var(--primary);
-            color: #151210;
+            color: #061a1e;
         }
         .player-row {
             display: flex;
@@ -137,17 +139,17 @@
             font-size: 18px;
         }
         .btn-minus { 
-            background-color: #3d1c1c; 
-            color: #ff7b7b;
-            border: 1px solid #632525;
+            background-color: rgba(224, 108, 117, 0.2); 
+            color: var(--danger);
+            border: 1px solid rgba(224, 108, 117, 0.4);
         }
-        .btn-minus:hover { background-color: #522323; }
+        .btn-minus:hover { background-color: rgba(224, 108, 117, 0.4); }
         .btn-plus { 
-            background-color: #1b382b; 
-            color: #79d7a8;
-            border: 1px solid #234d39;
+            background-color: rgba(43, 187, 161, 0.2); 
+            color: var(--primary);
+            border: 1px solid rgba(43, 187, 161, 0.4);
         }
-        .btn-plus:hover { background-color: #244b3a; }
+        .btn-plus:hover { background-color: rgba(43, 187, 161, 0.4); }
         
         .btn-secondary {
             background-color: transparent;
@@ -155,22 +157,30 @@
             border: 1px solid var(--primary);
         }
         .btn-secondary:hover {
-            background-color: rgba(212, 163, 115, 0.1);
+            background-color: rgba(43, 187, 161, 0.1);
         }
         
+        .settle-area {
+            background: var(--row-bg);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            margin-top: 20px;
+        }
+
         .log-list {
             font-size: 0.85em;
             color: var(--text-muted);
             max-height: 130px;
             overflow-y: auto;
-            background: #1a1512;
+            background: #081e23;
             padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--border);
         }
         .log-list div {
             margin-bottom: 4px;
-            border-bottom: 1px solid #241e1a;
+            border-bottom: 1px solid #102e35;
             padding-bottom: 4px;
         }
         #gameArea, #saldoArea {
@@ -182,22 +192,40 @@
             font-size: 1.05em;
         }
         #saldoList {
-            background-color: #1a1512;
+            background-color: #081e23;
             border-radius: 8px;
             padding: 5px 12px;
             border: 1px solid var(--border);
+        }
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .btn-home {
+            background: transparent;
+            color: var(--text-muted);
+            border: none;
+            font-size: 1.2em;
+            padding: 0;
+            width: auto;
+        }
+        .btn-home:hover {
+            color: var(--text);
+            background: transparent;
+            transform: scale(1.1);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Birre al Mare 🍻</h1>
-
     <div id="setupArea">
+        <h1>Birre al Mare 🍻</h1>
         <p>Inserisci un ID per accedere ai conteggi condivisi o creane uno nuovo.</p>
         <div class="flex-row">
-            <input type="text" id="gameIdInput" placeholder="Es: spiaggia2026">
+            <input type="text" id="gameIdInput" placeholder="Es: rimini2026">
             <button onclick="loadGameFromInput()">Entra</button>
         </div>
         
@@ -208,7 +236,10 @@
     </div>
 
     <div id="gameArea">
-        <h2 id="displayGameId"></h2>
+        <div class="header-actions">
+            <button class="btn-home" onclick="goHome()">⬅️ Home</button>
+            <h2 id="displayGameId" style="margin: 0; font-size: 1.3em;"></h2>
+        </div>
         
         <div class="flex-row">
             <input type="text" id="newPlayerName" placeholder="Nome Giocatore">
@@ -216,6 +247,20 @@
         </div>
 
         <div id="playersList" style="margin-top: 25px;"></div>
+
+        <!-- Sezione Bevute Pagate -->
+        <div class="settle-area">
+            <h3 style="margin-top: 0; font-size: 1.1em;">Segna Bevuta Pagata</h3>
+            <div class="flex-row">
+                <select id="payerSelect">
+                    <option value="">Chi paga...</option>
+                </select>
+                <select id="receiverSelect">
+                    <option value="">A chi...</option>
+                </select>
+            </div>
+            <button class="btn-secondary" style="width: 100%; margin-top: 10px;" onclick="settleDebt()">Conferma Bevuta 🍻</button>
+        </div>
 
         <button class="btn-secondary" style="width: 100%; margin-top: 20px;" onclick="toggleSaldi()">Mostra / Nascondi Saldi</button>
 
@@ -236,12 +281,14 @@
         logs: []
     };
 
-    // Inizializzazione al caricamento della pagina
     window.onload = function() {
-        renderRecentChips();
+        try {
+            renderRecentChips();
+        } catch(e) {
+            console.log("Accesso alla memoria locale limitato.");
+        }
     };
 
-    // --- GESTIONE ID RECENTI ---
     function getRecentGames() {
         const recent = localStorage.getItem('birre_recent_ids');
         return recent ? JSON.parse(recent) : [];
@@ -249,10 +296,8 @@
 
     function saveRecentGame(id) {
         let recent = getRecentGames();
-        // Rimuove l'ID se esisteva già per metterlo in prima posizione
         recent = recent.filter(item => item !== id);
         recent.unshift(id);
-        // Tiene solo i primi 5
         if (recent.length > 5) recent.pop();
         localStorage.setItem('birre_recent_ids', JSON.stringify(recent));
     }
@@ -273,7 +318,6 @@
         ).join('');
     }
 
-    // --- FUNZIONI DI ACCESSO ---
     function loadGameFromInput() {
         const id = document.getElementById('gameIdInput').value.trim().toLowerCase();
         if (!id) return alert("Inserisci un ID valido");
@@ -290,9 +334,17 @@
         
         document.getElementById('setupArea').style.display = 'none';
         document.getElementById('gameArea').style.display = 'block';
-        document.getElementById('displayGameId').innerText = "Partita: " + currentGameId;
+        document.getElementById('displayGameId').innerText = "ID: " + currentGameId;
 
         fetchData();
+    }
+
+    function goHome() {
+        document.getElementById('gameArea').style.display = 'none';
+        document.getElementById('setupArea').style.display = 'block';
+        document.getElementById('gameIdInput').value = "";
+        currentGameId = "";
+        renderRecentChips();
     }
 
     function fetchData() {
@@ -316,7 +368,6 @@
         if (gameData.logs.length > 40) gameData.logs.pop();
     }
 
-    // --- LOGICA DI GIOCO ---
     function addPlayer() {
         const nameInput = document.getElementById('newPlayerName');
         const name = nameInput.value.trim();
@@ -339,7 +390,27 @@
         saveData();
     }
 
-    // --- ALGORITMO CONTEGGI ---
+    function settleDebt() {
+        const payer = document.getElementById('payerSelect').value;
+        const receiver = document.getElementById('receiverSelect').value;
+
+        if (!payer || !receiver) return alert("Seleziona chi paga e chi riceve.");
+        if (payer === receiver) return alert("Una persona non può pagare una birra a se stessa!");
+
+        // Chi paga "dà via" una birra, quindi gli viene tolto un debito (+1 al saldo)
+        // Chi riceve prende la birra, quindi gli viene scalato un credito (-1 al saldo)
+        gameData.players[payer] += 1;
+        gameData.players[receiver] -= 1;
+
+        addLog(`🍻 ${payer} ha pagato una birra a ${receiver}`);
+        
+        // Reset delle selezioni
+        document.getElementById('payerSelect').value = "";
+        document.getElementById('receiverSelect').value = "";
+        
+        saveData();
+    }
+
     function calcolaSaldi() {
         let debtors = [];
         let creditors = [];
@@ -370,10 +441,12 @@
         return transactions;
     }
 
-    // --- INTERFACCIA GRAFICA ---
     function renderUI() {
         const list = document.getElementById('playersList');
         list.innerHTML = "";
+        
+        let playerOptions = `<option value="">Seleziona...</option>`;
+
         for (const [player, score] of Object.entries(gameData.players)) {
             list.innerHTML += `
                 <div class="player-row">
@@ -384,7 +457,13 @@
                     </div>
                 </div>
             `;
+            
+            playerOptions += `<option value="${player}">${player}</option>`;
         }
+
+        // Popola i menu a tendina per le bevute pagate
+        document.getElementById('payerSelect').innerHTML = playerOptions;
+        document.getElementById('receiverSelect').innerHTML = playerOptions;
 
         const saldoList = document.getElementById('saldoList');
         const transazioni = calcolaSaldi();
