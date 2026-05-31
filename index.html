@@ -7,10 +7,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #0077b6;
-            --bg: #f0f8ff;
-            --card: #ffffff;
-            --text: #333333;
+            --bg: #151210;         /* Fondo scuro e caldo */
+            --card: #221c19;       /* Colore dei blocchi principali */
+            --primary: #d4a373;    /* Ambra / Oro caldo per elementi principali */
+            --primary-hover: #b98a5c;
+            --text: #f4f1de;       /* Testo chiaro crema */
+            --text-muted: #a0938a; /* Testo secondario */
+            --border: #3d322c;
+            --row-bg: #2d2420;
         }
         body {
             font-family: 'Alegreya', serif;
@@ -23,37 +27,58 @@
         }
         .container {
             background: var(--card);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             width: 100%;
-            max-width: 500px;
+            max-width: 480px;
+            border: 1px solid var(--border);
         }
         h1, h2, h3 {
             font-family: 'Alegreya', serif;
             text-align: center;
             color: var(--primary);
+            letter-spacing: 0.5px;
+            margin-top: 0;
+        }
+        p {
+            color: var(--text-muted);
+            text-align: center;
+            font-size: 0.95em;
+            line-height: 1.5;
         }
         input, button {
             font-family: 'Alegreya', serif;
-            padding: 10px;
+            padding: 12px;
             margin: 5px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
             font-size: 16px;
+            background-color: #1a1512;
+            color: var(--text);
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
         input::placeholder {
             font-family: 'Alegreya', serif;
+            color: #6d5c54;
         }
         button {
             background-color: var(--primary);
-            color: white;
+            color: #151210;
+            font-weight: 700;
             border: none;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background-color 0.2s, transform 0.1s;
         }
         button:hover {
-            background-color: #005f8c;
+            background-color: var(--primary-hover);
+        }
+        button:active {
+            transform: scale(0.98);
         }
         .flex-row {
             display: flex;
@@ -62,224 +87,17 @@
         .flex-row input {
             flex: 1;
         }
-        .player-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: #e8f4f8;
-            padding: 10px;
+        .recent-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .recent-title {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
             margin-bottom: 8px;
-            border-radius: 8px;
         }
-        .btn-circle {
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .btn-minus { background-color: #e63946; }
-        .btn-minus:hover { background-color: #cc333f; }
-        .btn-plus { background-color: #2a9d8f; }
-        .btn-plus:hover { background-color: #268c80; }
-        .log-list {
-            font-size: 0.9em;
-            color: #555;
-            max-height: 150px;
-            overflow-y: auto;
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 6px;
-        }
-        #gameArea, #saldoArea {
-            display: none;
-        }
-        .saldo-item {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <h1>Birre al Mare 🍻</h1>
-
-    <div id="setupArea">
-        <p>Inserisci un ID per la partita o creane uno nuovo per condividere i conteggi.</p>
-        <div class="flex-row">
-            <input type="text" id="gameIdInput" placeholder="Es: rimini2026">
-            <button onclick="loadGame()">Entra</button>
-        </div>
-    </div>
-
-    <div id="gameArea">
-        <h2 id="displayGameId"></h2>
-        
-        <div class="flex-row">
-            <input type="text" id="newPlayerName" placeholder="Nome Giocatore">
-            <button onclick="addPlayer()">Aggiungi</button>
-        </div>
-
-        <div id="playersList" style="margin-top: 20px;"></div>
-
-        <button style="width: 100%; margin-top: 15px;" onclick="toggleSaldi()">Mostra/Nascondi Saldi</button>
-
-        <div id="saldoArea">
-            <h3>Chi deve a chi:</h3>
-            <div id="saldoList"></div>
-        </div>
-
-        <h3>Cronologia</h3>
-        <div class="log-list" id="logList"></div>
-    </div>
-</div>
-
-<script>
-    let currentGameId = "";
-    let gameData = {
-        players: {}, 
-        logs: []
-    };
-
-    // --- FUNZIONI DI GESTIONE DATI ---
-    function loadGame() {
-        const id = document.getElementById('gameIdInput').value.trim().toLowerCase();
-        if (!id) return alert("Inserisci un ID valido");
-
-        currentGameId = id;
-        document.getElementById('setupArea').style.display = 'none';
-        document.getElementById('gameArea').style.display = 'block';
-        document.getElementById('displayGameId').innerText = "Partita: " + currentGameId;
-
-        fetchData();
-    }
-
-    function fetchData() {
-        // [!] INTEGRAZIONE BACKEND: 
-        // Qui puoi inserire una chiamata fetch() a un tuo Google Apps Script (es. leggendo la colonna D di uno sheet) 
-        // o al tuo database per recuperare il JSON associato a 'currentGameId'.
-        // Per ora usa il localStorage per renderlo testabile immediatamente nel browser.
-        
-        const saved = localStorage.getItem('birre_' + currentGameId);
-        if (saved) {
-            gameData = JSON.parse(saved);
-        } else {
-            gameData = { players: {}, logs: [] };
-        }
-        renderUI();
-    }
-
-    function saveData() {
-        // [!] INTEGRAZIONE BACKEND:
-        // Sostituisci questa riga con una fetch() in POST verso il tuo Google Apps Script o webhook per salvare i dati.
-        localStorage.setItem('birre_' + currentGameId, JSON.stringify(gameData));
-        renderUI();
-    }
-
-    function addLog(message) {
-        const date = new Date().toLocaleString('it-IT');
-        gameData.logs.unshift(`[${date}] ${message}`);
-        if (gameData.logs.length > 50) gameData.logs.pop(); // Tieni solo gli ultimi 50 log
-    }
-
-    // --- FUNZIONI DI GIOCO ---
-    function addPlayer() {
-        const nameInput = document.getElementById('newPlayerName');
-        const name = nameInput.value.trim();
-        if (!name) return;
-
-        if (gameData.players[name] !== undefined) {
-            return alert("Giocatore già presente!");
-        }
-
-        gameData.players[name] = 0;
-        addLog(`Aggiunto giocatore: ${name}`);
-        nameInput.value = "";
-        saveData();
-    }
-
-    function updateScore(player, amount) {
-        gameData.players[player] += amount;
-        const action = amount > 0 ? "+1 birra" : "-1 birra";
-        addLog(`${player}: ${action} (Totale: ${gameData.players[player]})`);
-        saveData();
-    }
-
-    // --- ALGORITMO SALDI ---
-    function calcolaSaldi() {
-        let debtors = [];
-        let creditors = [];
-
-        // Separa chi deve dare (negativo) da chi deve ricevere (positivo)
-        for (const [name, balance] of Object.entries(gameData.players)) {
-            if (balance < 0) debtors.push({ name, amount: -balance });
-            if (balance > 0) creditors.push({ name, amount: balance });
-        }
-
-        let transactions = [];
-        let i = 0; // indice debitori
-        let j = 0; // indice creditori
-
-        // Incrocia debitori e creditori
-        while (i < debtors.length && j < creditors.length) {
-            let debtor = debtors[i];
-            let creditor = creditors[j];
-            
-            // Trova il minimo tra il debito e il credito
-            let amountToPay = Math.min(debtor.amount, creditor.amount);
-
-            transactions.push(`<strong>${debtor.name}</strong> deve ${amountToPay} birra/e a <strong>${creditor.name}</strong>`);
-
-            debtor.amount -= amountToPay;
-            creditor.amount -= amountToPay;
-
-            if (debtor.amount === 0) i++;
-            if (creditor.amount === 0) j++;
-        }
-
-        return transactions;
-    }
-
-    // --- RENDER UI ---
-    function renderUI() {
-        // Render Giocatori
-        const list = document.getElementById('playersList');
-        list.innerHTML = "";
-        for (const [player, score] of Object.entries(gameData.players)) {
-            list.innerHTML += `
-                <div class="player-row">
-                    <span style="font-size: 1.2em;"><strong>${player}</strong>: ${score}</span>
-                    <div>
-                        <button class="btn-circle btn-minus" onclick="updateScore('${player}', -1)">-</button>
-                        <button class="btn-circle btn-plus" onclick="updateScore('${player}', 1)">+</button>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Render Saldi
-        const saldoList = document.getElementById('saldoList');
-        const transazioni = calcolaSaldi();
-        if (transazioni.length === 0) {
-            saldoList.innerHTML = "<p>Nessun debito in sospeso!</p>";
-        } else {
-            saldoList.innerHTML = transazioni.map(t => `<div class="saldo-item">${t}</div>`).join('');
-        }
-
-        // Render Log
-        const logArea = document.getElementById('logList');
-        logArea.innerHTML = gameData.logs.map(log => `<div>${log}</div>`).join('');
-    }
-
-    function toggleSaldi() {
-        const area = document.getElementById('saldoArea');
-        area.style.display = area.style.display === 'block' ? 'none' : 'block';
-    }
-</script>
-
-</body>
-</html>
+        .recent-chips {
+            display: flex;
+            flex-wrap: wrap;
