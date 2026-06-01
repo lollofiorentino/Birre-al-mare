@@ -10,8 +10,8 @@
         :root {
             --bg: #050b14;         /* Blu notte profondo */
             --card: #0d182b;       /* Blu notte per il contenitore */
-            --primary: #00d4e3;    /* Ciano brillante (Altissimo contrasto) */
-            --primary-hover: #00b4c2;
+            --primary: #dfb12c;    /* Giallo ocra contrastante */
+            --primary-hover: #c49922;
             --text: #ffffff;       /* Bianco puro */
             --text-muted: #b4cce0; /* Azzurro ghiaccio chiaro */
             --border: #233e66;     /* Bordo più visibile */
@@ -46,7 +46,7 @@
             color: var(--primary);
             letter-spacing: -0.5px;
             margin-top: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Leggera ombra per staccare dal fondo */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
         p {
             color: var(--text-muted);
@@ -71,11 +71,11 @@
         }
         input::placeholder, select::placeholder {
             font-family: 'Inter', sans-serif;
-            color: #8ba4ba; /* Placeholder più chiaro */
+            color: #8ba4ba;
         }
         button {
             background-color: var(--primary);
-            color: #050b14; /* Testo scuro sul bottone chiaro per massimizzare la leggibilità */
+            color: #050b14; 
             font-weight: 700;
             border: none;
             cursor: pointer;
@@ -152,11 +152,11 @@
         }
         .btn-minus:hover { background-color: rgba(255, 107, 107, 0.25); }
         .btn-plus { 
-            background-color: rgba(0, 212, 227, 0.15); 
+            background-color: rgba(223, 177, 44, 0.15); 
             color: var(--primary);
-            border: 1px solid rgba(0, 212, 227, 0.3);
+            border: 1px solid rgba(223, 177, 44, 0.3);
         }
-        .btn-plus:hover { background-color: rgba(0, 212, 227, 0.25); }
+        .btn-plus:hover { background-color: rgba(223, 177, 44, 0.25); }
         
         .btn-secondary {
             background-color: transparent;
@@ -164,7 +164,7 @@
             border: 1px solid var(--primary);
         }
         .btn-secondary:hover {
-            background-color: rgba(0, 212, 227, 0.15);
+            background-color: rgba(223, 177, 44, 0.15);
             color: #ffffff;
         }
         
@@ -203,9 +203,12 @@
             border-bottom: 1px solid var(--border);
             padding-bottom: 4px;
         }
-        #gameArea, #saldoArea {
+        
+        /* Modifica: rimosso #saldoArea dal display: none */
+        #gameArea {
             display: none;
         }
+        
         .saldo-item {
             padding: 10px;
             border-bottom: 1px solid var(--border);
@@ -246,7 +249,7 @@
         <h1>Birre al Mare 🍻</h1>
         <p>Inserisci un ID per accedere ai conteggi condivisi o creane uno nuovo.</p>
         <div class="flex-row">
-            <input type="text" id="gameIdInput" placeholder="Es: rimini2026">
+            <input type="text" id="gameIdInput" placeholder="Es: rimini2026" onkeypress="if(event.key === 'Enter') loadGameFromInput()">
             <button onclick="loadGameFromInput()">Entra</button>
         </div>
         
@@ -263,7 +266,7 @@
         </div>
         
         <div class="flex-row">
-            <input type="text" id="newPlayerName" placeholder="Nome Giocatore">
+            <input type="text" id="newPlayerName" placeholder="Nome Giocatore" onkeypress="if(event.key === 'Enter') addPlayer()">
             <button onclick="addPlayer()">Aggiungi</button>
         </div>
 
@@ -282,9 +285,7 @@
             <button class="btn-secondary" style="width: 100%; margin-top: 10px;" onclick="settleDebt()">Conferma Bevuta 🍻</button>
         </div>
 
-        <button class="btn-secondary" style="width: 100%; margin-top: 20px;" onclick="toggleSaldi()">Mostra / Nascondi Saldi</button>
-
-        <div id="saldoArea" style="margin-top: 15px;">
+        <div id="saldoArea" style="margin-top: 25px;">
             <h3>Situazione Saldi</h3>
             <div id="saldoList"></div>
         </div>
@@ -298,7 +299,7 @@
 
 <script>
     // INSERISCI QUI IL LINK OTTENUTO DA APPS SCRIPT
-    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmTKeWLYnucEIBs_gKHk5ep_9sd_8NVCbe9QojyRhSWeIFk6jelHW-JzyBylnPsT-I/exec"; 
+    const APP_SCRIPT_URL = ""; 
 
     let currentGameId = "";
     let gameData = {
@@ -548,10 +549,7 @@
         logArea.innerHTML = gameData.logs.map(log => `<div>${log}</div>`).join('');
     }
 
-    function toggleSaldi() {
-        const area = document.getElementById('saldoArea');
-        area.style.display = area.style.display === 'block' ? 'none' : 'block';
-    }
+    // Modifica: rimossa la funzione toggleSaldi()
 </script>
 
 </body>
