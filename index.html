@@ -179,6 +179,18 @@
             background-color: var(--success);
             color: #050b14;
         }
+        
+        .btn-delete {
+            background-color: transparent;
+            color: var(--danger);
+            border: 1px solid var(--danger);
+            margin-top: 25px;
+            width: 100%;
+        }
+        .btn-delete:hover {
+            background-color: rgba(255, 107, 107, 0.15);
+            color: #ffffff;
+        }
 
         .settle-area {
             background: var(--row-bg);
@@ -204,7 +216,6 @@
             padding-bottom: 4px;
         }
         
-        /* Modifica: rimosso #saldoArea dal display: none */
         #gameArea {
             display: none;
         }
@@ -294,6 +305,8 @@
 
         <h3 style="margin-top: 25px; text-align: left; font-size: 1.1em;">Cronologia Modifiche</h3>
         <div class="log-list" id="logList"></div>
+        
+        <button id="btnDelete" class="btn-delete" onclick="deleteGame()">🗑️ ELIMINA PARTITA E CACHE</button>
     </div>
 </div>
 
@@ -437,6 +450,41 @@
             btn.classList.remove("success");
         }, 2000);
     }
+    
+    // Funzione per eliminare la partita e svuotare la cache
+    async function deleteGame() {
+        if (!confirm("Sei sicuro di voler eliminare questa partita? Tutti i dati verranno persi e la cache verrà svuotata.")) {
+            return;
+        }
+
+        // Svuota l'oggetto dati
+        gameData = { players: {}, logs: [] };
+
+        // 1. Se il server è configurato, salva lo stato vuoto sovrascrivendo i vecchi dati
+        if (APP_SCRIPT_URL) {
+            try {
+                await fetch(APP_SCRIPT_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ id: currentGameId, data: gameData })
+                });
+            } catch (error) {
+                console.error("Errore cancellazione server:", error);
+            }
+        }
+
+        // 2. Rimuovi i dati salvati nella cache locale per questo ID specifico
+        localStorage.removeItem('birre_' + currentGameId);
+
+        // 3. Rimuovi l'ID dalla cronologia delle partite recenti
+        let recent = getRecentGames();
+        recent = recent.filter(item => item !== currentGameId);
+        localStorage.setItem('birre_recent_ids', JSON.stringify(recent));
+
+        // 4. Torna alla home (aggiornerà automaticamente anche i bottoncini)
+        goHome();
+        alert("Partita eliminata e cache svuotata con successo.");
+    }
 
     function addLog(message) {
         const date = new Date().toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
@@ -548,8 +596,6 @@
         const logArea = document.getElementById('logList');
         logArea.innerHTML = gameData.logs.map(log => `<div>${log}</div>`).join('');
     }
-
-    // Modifica: rimossa la funzione toggleSaldi()
 </script>
 
 </body>
