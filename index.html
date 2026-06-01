@@ -347,19 +347,46 @@
         renderRecentChips();
     }
 
-    function fetchData() {
-        const saved = localStorage.getItem('birre_' + currentGameId);
-        if (saved) {
-            gameData = JSON.parse(saved);
-        } else {
-            gameData = { players: {}, logs: [] };
+    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmTKeWLYnucEIBs_gKHk5ep_9sd_8NVCbe9QojyRhSWeIFk6jelHW-JzyBylnPsT-I/exec";
+
+    async function fetchData() {
+        document.getElementById('playersList').innerHTML = "<p>Caricamento dati in corso...</p>";
+        
+        try {
+            const response = await fetch(`${APP_SCRIPT_URL}?id=${currentGameId}`);
+            const data = await response.json();
+            
+            if (data && data.players) {
+                gameData = data;
+            } else {
+                gameData = { players: {}, logs: [] };
+            }
+            renderUI();
+        } catch (error) {
+            console.error("Errore:", error);
+            alert("Errore di caricamento. Controlla la connessione.");
         }
-        renderUI();
     }
 
-    function saveData() {
-        localStorage.setItem('birre_' + currentGameId, JSON.stringify(gameData));
-        renderUI();
+    async function saveData() {
+        // Aggiorna subito la grafica per non far aspettare chi clicca
+        renderUI(); 
+        
+        try {
+            await fetch(APP_SCRIPT_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'text/plain;charset=utf-8',
+                },
+                body: JSON.stringify({
+                    id: currentGameId,
+                    data: gameData
+                })
+            });
+        } catch (error) {
+            console.error("Errore salvataggio:", error);
+            alert("Errore di sincronizzazione col server.");
+        }
     }
 
     function addLog(message) {
