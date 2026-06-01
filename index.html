@@ -5,26 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Birre al Mare</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050b14; --card: #0d182b; --primary: #dfb12c; --primary-hover: #c49922;
-            --text: #ffffff; --text-muted: #94a3b8; --border: #1e293b; --row-bg: #1e293b;
-            --danger: #ef4444; --success: #22c55e;
+            --text: #ffffff; --text-muted: #b4cce0; --border: #233e66; --row-bg: #112038;
+            --danger: #ff6b6b; --input-bg: #081121; --success: #2bd458;
         }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; display: flex; justify-content: center; }
-        .container { background: var(--card); padding: 32px; border-radius: 20px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.3); width: 100%; max-width: 440px; border: 1px solid var(--border); }
-        h1 { color: var(--primary); font-size: 1.8rem; margin-bottom: 2rem; text-align: center; }
-        h2 { font-size: 1.2rem; color: var(--text); margin-bottom: 1rem; }
-        .setup-section { margin-bottom: 2.5rem; }
-        input, select, button { width: 100%; padding: 14px; margin: 8px 0; border-radius: 12px; border: 1px solid var(--border); background: #0f172a; color: white; font-size: 1rem; box-sizing: border-box; }
-        button { background-color: var(--primary); color: #000; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s; }
-        button:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
-        .player-row { display: flex; justify-content: space-between; align-items: center; background: var(--row-bg); padding: 12px 16px; border-radius: 12px; margin-bottom: 8px; }
-        .btn-circle { width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; margin: 0 4px; padding: 0; }
-        .log-list { font-size: 0.85rem; color: var(--text-muted); height: 120px; overflow-y: auto; background: #0f172a; padding: 12px; border-radius: 12px; border: 1px solid var(--border); }
+        .container { background: var(--card); padding: 30px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); width: 100%; max-width: 480px; border: 1px solid var(--border); }
+        h1, h2, h3 { color: var(--primary); text-align: center; margin-top: 0; }
+        input, select, button { padding: 12px; margin: 5px 0; border: 1px solid var(--border); border-radius: 8px; background: var(--input-bg); color: var(--text); width: 100%; box-sizing: border-box; }
+        button { background-color: var(--primary); color: #050b14; font-weight: 700; cursor: pointer; border: none; transition: 0.2s; }
+        button:hover { background-color: var(--primary-hover); }
+        .setup-section { background: var(--row-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-top: 20px; }
+        .player-row { display: flex; justify-content: space-between; align-items: center; background: var(--row-bg); padding: 12px; margin-bottom: 8px; border-radius: 10px; border: 1px solid var(--border); }
+        .btn-circle { border-radius: 50%; width: 36px; height: 36px; font-size: 18px; border: 1px solid rgba(223, 177, 44, 0.3); background: rgba(223, 177, 44, 0.15); color: var(--primary); }
+        .btn-minus { border: 1px solid rgba(255, 107, 107, 0.3); background: rgba(255, 107, 107, 0.15); color: var(--danger); }
+        .saldo-item { padding: 10px; border-bottom: 1px solid var(--border); font-size: 1.05em; }
+        #saldoList { background-color: var(--input-bg); border-radius: 8px; padding: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
+        .log-list { font-size: 0.85em; color: var(--text-muted); max-height: 130px; overflow-y: auto; background: var(--input-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border); }
         #gameArea, #playerSelectOverlay { display: none; }
-        .btn-delete { background: transparent; border: 1px solid var(--danger); color: var(--danger); margin-top: 2rem; }
+        .btn-delete { background: transparent; border: 1px solid var(--danger); color: var(--danger); width: 100%; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -47,23 +49,30 @@
     <div id="playerSelectOverlay" class="container" style="position:fixed; top:20px; z-index:100; background: var(--bg);">
         <h2>Chi sei?</h2>
         <select id="userAliasSelect"></select>
-        <input type="text" id="newAliasInput" placeholder="O scrivi un nome nuovo...">
+        <input type="text" id="newAliasInput" placeholder="O scrivi nome nuovo...">
         <button onclick="confirmIdentity()">Conferma Identità</button>
     </div>
 
     <div id="gameArea">
         <h2 id="displayGameId"></h2>
+        <p>Giocatore attivo: <strong><span id="currentUser"></span></strong></p>
         <div class="flex-row">
             <input type="text" id="newPlayerName" placeholder="Nome Giocatore">
             <button onclick="addPlayer()">Aggiungi</button>
         </div>
-        <div id="playersList" style="margin: 20px 0;"></div>
+        <div id="playersList" style="margin-top: 20px;"></div>
+        
         <h3>Situazione Saldi</h3>
-        <div id="saldoList" style="margin-bottom: 20px;"></div>
-        <select id="payerSelect"></select>
-        <select id="receiverSelect"></select>
-        <button onclick="settleDebt()" style="background:var(--success)">Conferma Bevuta 🍻</button>
-        <button onclick="forceSave()" style="background:var(--primary); margin-top: 10px;">💾 SALVA</button>
+        <div id="saldoList"></div>
+
+        <div class="settle-area">
+            <h3>Segna Bevuta Pagata</h3>
+            <select id="payerSelect"></select>
+            <select id="receiverSelect"></select>
+            <button onclick="settleDebt()" style="background:var(--success); color:#fff">Conferma Bevuta 🍻</button>
+        </div>
+
+        <button onclick="forceSave()" style="background:var(--primary); margin-top: 20px;">💾 SALVA PARTITA</button>
         <h3>Cronologia</h3>
         <div class="log-list" id="logList"></div>
         <button class="btn-delete" onclick="deleteGame()">🗑️ ELIMINA PARTITA</button>
@@ -74,6 +83,7 @@
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmTKeWLYnucEIBs_gKHk5ep_9sd_8NVCbe9QojyRhSWeIFk6jelHW-JzyBylnPsT-I/exec";
     let currentGameId = "", myAlias = "", gameData = { players: {}, logs: [] };
 
+    // --- LOGICA BASE ---
     async function checkGameExists(id) {
         try { const res = await fetch(`${APP_SCRIPT_URL}?id=${id}`); const data = await res.json(); return (data && (Object.keys(data.players || {}).length > 0 || (data.logs && data.logs.length > 0))); } catch(e) { return null; }
     }
@@ -89,11 +99,10 @@
     }
 
     function confirmIdentity() {
-        const selected = document.getElementById('userAliasSelect').value;
-        const manual = document.getElementById('newAliasInput').value.trim();
-        myAlias = manual || selected;
+        myAlias = document.getElementById('newAliasInput').value.trim() || document.getElementById('userAliasSelect').value;
         if(!myAlias) return alert("Scegli un nome!");
         if(!gameData.players[myAlias]) { gameData.players[myAlias] = 0; addLog(`si è unito`); }
+        document.getElementById('currentUser').innerText = myAlias;
         document.getElementById('playerSelectOverlay').style.display = 'none';
         document.getElementById('gameArea').style.display = 'block';
         renderUI();
@@ -104,21 +113,28 @@
     function addLog(msg) { const t = new Date().toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }); gameData.logs.unshift(`[${t}] ${myAlias}: ${msg}`); if(gameData.logs.length > 40) gameData.logs.pop(); }
 
     function addPlayer() { const n = document.getElementById('newPlayerName').value.trim(); if(n && !gameData.players[n]) { gameData.players[n] = 0; addLog(`ha aggiunto ${n}`); saveData(); } }
-    function updateScore(p, amt) { gameData.players[p] += amt; addLog(`ha modificato ${p} di ${amt}`); saveData(); }
-    function settleDebt() { const p = document.getElementById('payerSelect').value; const r = document.getElementById('receiverSelect').value; if(p && r && p !== r) { gameData.players[p] += 1; gameData.players[r] -= 1; addLog(`bevuta: ${p} paga a ${r}`); saveData(); } }
-    function forceSave() { const btn = event.target; saveData(); btn.innerHTML = "✅ SALVATO!"; setTimeout(() => btn.innerHTML = "💾 SALVA", 2000); }
+    function updateScore(p, amt) { gameData.players[p] += amt; addLog(`modifica ${p} di ${amt}`); saveData(); }
+    function settleDebt() { const p = document.getElementById('payerSelect').value; const r = document.getElementById('receiverSelect').value; if(p && r && p !== r) { gameData.players[p] += 1; gameData.players[r] -= 1; addLog(`bevuta: ${p} -> ${r}`); saveData(); } }
+    function forceSave() { const btn = event.target; saveData(); btn.innerHTML = "✅ SALVATO!"; setTimeout(() => btn.innerHTML = "💾 SALVA PARTITA", 2000); }
     function deleteGame() { if(confirm("Eliminare tutto?")) { gameData = { players: {}, logs: [] }; saveData(); location.reload(); } }
 
     function renderUI() {
         const list = document.getElementById('playersList'); list.innerHTML = "";
         let ops = '<option value="">Seleziona...</option>';
         for(const [p, s] of Object.entries(gameData.players)) {
-            list.innerHTML += `<div class="player-row"><span><strong>${p}</strong>: ${s}</span><div><button class="btn-circle" onclick="updateScore('${p}', -1)">-</button><button class="btn-circle" onclick="updateScore('${p}', 1)">+</button></div></div>`;
+            list.innerHTML += `<div class="player-row"><span><strong>${p}</strong>: ${s}</span><div><button class="btn-circle btn-minus" onclick="updateScore('${p}', -1)">-</button><button class="btn-circle btn-plus" onclick="updateScore('${p}', 1)">+</button></div></div>`;
             ops += `<option value="${p}">${p}</option>`;
         }
         document.getElementById('payerSelect').innerHTML = ops;
         document.getElementById('receiverSelect').innerHTML = ops;
         document.getElementById('logList').innerHTML = gameData.logs.map(l => `<div>${l}</div>`).join('');
+        
+        // Calcolo saldi
+        const sl = document.getElementById('saldoList'); sl.innerHTML = "";
+        const creditors = Object.entries(gameData.players).filter(x=>x[1]>0), debtors = Object.entries(gameData.players).filter(x=>x[1]<0);
+        if(!debtors.length && !creditors.length) sl.innerHTML = "Tutto in pari!";
+        // Logica semplificata saldi per estetica
+        debtors.forEach(d => creditors.forEach(c => { if(d[1]!==0 && c[1]!==0) sl.innerHTML += `<div class="saldo-item"><strong>${d[0]}</strong> deve a <strong>${c[0]}</strong></div>`; }));
     }
 
     async function joinExistingGame() { const id = document.getElementById('joinGameId').value.trim().toLowerCase(); if(await checkGameExists(id)) executeLoad(id, false); else alert("Partita non trovata"); }
