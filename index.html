@@ -4,23 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Birre al Mare</title>
-    <!-- Favicon Emoji -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍻</text></svg>">
-    <!-- Font Sans Serif (Inter) -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050b14;         /* Blu notte profondo */
             --card: #0d182b;       /* Blu notte per il contenitore */
-            --primary: #00828c;    /* Ottanio brillante */
-            --primary-hover: #00666e;
-            --text: #e8f1f2;       /* Bianco ghiaccio */
-            --text-muted: #7d96ab; /* Azzurro grigiastro */
-            --border: #1a2c4c;     /* Bordo blu scuro */
+            --primary: #00d4e3;    /* Ciano brillante (Altissimo contrasto) */
+            --primary-hover: #00b4c2;
+            --text: #ffffff;       /* Bianco puro */
+            --text-muted: #b4cce0; /* Azzurro ghiaccio chiaro */
+            --border: #233e66;     /* Bordo più visibile */
             --row-bg: #112038;     /* Sfondo righe */
-            --danger: #d9534f;
-            --danger-hover: #c9302c;
-            --input-bg: #081121;   /* Blu notte quasi nero per gli input */
+            --danger: #ff6b6b;     /* Rosso brillante */
+            --danger-hover: #e05252;
+            --input-bg: #081121;   /* Sfondo input scurissimo */
+            --success: #2bd458;    /* Verde brillante */
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -47,6 +46,7 @@
             color: var(--primary);
             letter-spacing: -0.5px;
             margin-top: 0;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* Leggera ombra per staccare dal fondo */
         }
         p {
             color: var(--text-muted);
@@ -71,12 +71,12 @@
         }
         input::placeholder, select::placeholder {
             font-family: 'Inter', sans-serif;
-            color: #4a6782;
+            color: #8ba4ba; /* Placeholder più chiaro */
         }
         button {
             background-color: var(--primary);
-            color: #ffffff;
-            font-weight: 600;
+            color: #050b14; /* Testo scuro sul bottone chiaro per massimizzare la leggibilità */
+            font-weight: 700;
             border: none;
             cursor: pointer;
             transition: background-color 0.2s, transform 0.1s;
@@ -114,16 +114,17 @@
         }
         .chip-btn {
             background-color: var(--row-bg);
-            color: var(--primary);
+            color: #ffffff;
             border: 1px solid var(--border);
             padding: 6px 12px;
             font-size: 0.85em;
             border-radius: 20px;
             margin: 0;
+            font-weight: 400;
         }
         .chip-btn:hover {
             background-color: var(--primary);
-            color: #ffffff;
+            color: #050b14;
         }
         .player-row {
             display: flex;
@@ -145,17 +146,17 @@
             font-size: 18px;
         }
         .btn-minus { 
-            background-color: rgba(217, 83, 79, 0.15); 
+            background-color: rgba(255, 107, 107, 0.15); 
             color: var(--danger);
-            border: 1px solid rgba(217, 83, 79, 0.3);
+            border: 1px solid rgba(255, 107, 107, 0.3);
         }
-        .btn-minus:hover { background-color: rgba(217, 83, 79, 0.25); }
+        .btn-minus:hover { background-color: rgba(255, 107, 107, 0.25); }
         .btn-plus { 
-            background-color: rgba(0, 130, 140, 0.15); 
+            background-color: rgba(0, 212, 227, 0.15); 
             color: var(--primary);
-            border: 1px solid rgba(0, 130, 140, 0.3);
+            border: 1px solid rgba(0, 212, 227, 0.3);
         }
-        .btn-plus:hover { background-color: rgba(0, 130, 140, 0.25); }
+        .btn-plus:hover { background-color: rgba(0, 212, 227, 0.25); }
         
         .btn-secondary {
             background-color: transparent;
@@ -163,9 +164,22 @@
             border: 1px solid var(--primary);
         }
         .btn-secondary:hover {
-            background-color: rgba(0, 130, 140, 0.1);
+            background-color: rgba(0, 212, 227, 0.15);
+            color: #ffffff;
         }
         
+        .btn-save {
+            background-color: var(--primary);
+            color: #050b14;
+            font-weight: 700;
+            margin-top: 15px;
+            width: 100%;
+        }
+        .btn-save.success {
+            background-color: var(--success);
+            color: #050b14;
+        }
+
         .settle-area {
             background: var(--row-bg);
             padding: 15px;
@@ -196,331 +210,4 @@
             padding: 10px;
             border-bottom: 1px solid var(--border);
             font-size: 1.05em;
-        }
-        #saldoList {
-            background-color: var(--input-bg);
-            border-radius: 8px;
-            padding: 5px 12px;
-            border: 1px solid var(--border);
-        }
-        .header-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .btn-home {
-            background: transparent;
-            color: var(--text-muted);
-            border: none;
-            font-size: 1.2em;
-            padding: 0;
-            width: auto;
-        }
-        .btn-home:hover {
-            color: var(--text);
-            background: transparent;
-            transform: scale(1.1);
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div id="setupArea">
-        <h1>Birre al Mare 🍻</h1>
-        <p>Inserisci un ID per accedere ai conteggi condivisi o creane uno nuovo.</p>
-        <div class="flex-row">
-            <input type="text" id="gameIdInput" placeholder="Es: rimini2026">
-            <button onclick="loadGameFromInput()">Entra</button>
-        </div>
-        
-        <div class="recent-container" id="recentContainer" style="display: none;">
-            <div class="recent-title">Partite Recenti</div>
-            <div class="recent-chips" id="recentChips"></div>
-        </div>
-    </div>
-
-    <div id="gameArea">
-        <div class="header-actions">
-            <button class="btn-home" onclick="goHome()">⬅️ Home</button>
-            <h2 id="displayGameId" style="margin: 0; font-size: 1.3em;"></h2>
-        </div>
-        
-        <div class="flex-row">
-            <input type="text" id="newPlayerName" placeholder="Nome Giocatore">
-            <button onclick="addPlayer()">Aggiungi</button>
-        </div>
-
-        <div id="playersList" style="margin-top: 25px;"></div>
-
-        <!-- Sezione Bevute Pagate -->
-        <div class="settle-area">
-            <h3 style="margin-top: 0; font-size: 1.1em;">Segna Bevuta Pagata</h3>
-            <div class="flex-row">
-                <select id="payerSelect">
-                    <option value="">Chi paga...</option>
-                </select>
-                <select id="receiverSelect">
-                    <option value="">A chi...</option>
-                </select>
-            </div>
-            <button class="btn-secondary" style="width: 100%; margin-top: 10px;" onclick="settleDebt()">Conferma Bevuta 🍻</button>
-        </div>
-
-        <button class="btn-secondary" style="width: 100%; margin-top: 20px;" onclick="toggleSaldi()">Mostra / Nascondi Saldi</button>
-
-        <div id="saldoArea" style="margin-top: 20px;">
-            <h3>Situazione Saldi</h3>
-            <div id="saldoList"></div>
-        </div>
-
-        <h3 style="margin-top: 25px; text-align: left; font-size: 1.1em;">Cronologia Modifiche</h3>
-        <div class="log-list" id="logList"></div>
-    </div>
-</div>
-
-<script>
-    // INSERISCI QUI IL LINK OTTENUTO DA APPS SCRIPT
-    const APP_SCRIPT_URL = ""; 
-
-    let currentGameId = "";
-    let gameData = {
-        players: {}, 
-        logs: []
-    };
-
-    window.onload = function() {
-        try {
-            renderRecentChips();
-        } catch(e) {
-            console.log("Accesso alla memoria locale limitato.");
-        }
-    };
-
-    function getRecentGames() {
-        const recent = localStorage.getItem('birre_recent_ids');
-        return recent ? JSON.parse(recent) : [];
-    }
-
-    function saveRecentGame(id) {
-        let recent = getRecentGames();
-        recent = recent.filter(item => item !== id);
-        recent.unshift(id);
-        if (recent.length > 5) recent.pop();
-        localStorage.setItem('birre_recent_ids', JSON.stringify(recent));
-    }
-
-    function renderRecentChips() {
-        const recent = getRecentGames();
-        const container = document.getElementById('recentContainer');
-        const chipsWrapper = document.getElementById('recentChips');
-        
-        if (recent.length === 0) {
-            container.style.display = 'none';
-            return;
-        }
-        
-        container.style.display = 'block';
-        chipsWrapper.innerHTML = recent.map(id => 
-            `<button class="chip-btn" onclick="loadGameDirectly('${id}')">${id}</button>`
-        ).join('');
-    }
-
-    function loadGameFromInput() {
-        const id = document.getElementById('gameIdInput').value.trim().toLowerCase();
-        if (!id) return alert("Inserisci un ID valido");
-        executeLoad(id);
-    }
-
-    function loadGameDirectly(id) {
-        executeLoad(id);
-    }
-
-    function executeLoad(id) {
-        currentGameId = id;
-        saveRecentGame(id);
-        
-        document.getElementById('setupArea').style.display = 'none';
-        document.getElementById('gameArea').style.display = 'block';
-        document.getElementById('displayGameId').innerText = "ID: " + currentGameId;
-
-        fetchData();
-    }
-
-    function goHome() {
-        document.getElementById('gameArea').style.display = 'none';
-        document.getElementById('setupArea').style.display = 'block';
-        document.getElementById('gameIdInput').value = "";
-        currentGameId = "";
-        renderRecentChips();
-    }
-
-    async function fetchData() {
-        if (!APP_SCRIPT_URL) {
-            const saved = localStorage.getItem('birre_' + currentGameId);
-            gameData = saved ? JSON.parse(saved) : { players: {}, logs: [] };
-            renderUI();
-            return;
-        }
-
-        document.getElementById('playersList').innerHTML = "<p>Caricamento dati in corso...</p>";
-        try {
-            const response = await fetch(`${APP_SCRIPT_URL}?id=${currentGameId}`);
-            const data = await response.json();
-            if (data && data.players) {
-                gameData = data;
-            } else {
-                gameData = { players: {}, logs: [] };
-            }
-            renderUI();
-        } catch (error) {
-            console.error("Errore:", error);
-            alert("Errore di caricamento dal database.");
-        }
-    }
-
-    async function saveData() {
-        renderUI(); 
-        
-        if (!APP_SCRIPT_URL) {
-            localStorage.setItem('birre_' + currentGameId, JSON.stringify(gameData));
-            return;
-        }
-
-        try {
-            await fetch(APP_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-                body: JSON.stringify({
-                    id: currentGameId,
-                    data: gameData
-                })
-            });
-        } catch (error) {
-            console.error("Errore salvataggio:", error);
-            alert("Errore di sincronizzazione col server.");
-        }
-    }
-
-    function addLog(message) {
-        const date = new Date().toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-        gameData.logs.unshift(`[${date}] ${message}`);
-        if (gameData.logs.length > 40) gameData.logs.pop();
-    }
-
-    function addPlayer() {
-        const nameInput = document.getElementById('newPlayerName');
-        const name = nameInput.value.trim();
-        if (!name) return;
-
-        if (gameData.players[name] !== undefined) {
-            return alert("Giocatore già presente!");
-        }
-
-        gameData.players[name] = 0;
-        addLog(`Aggiunto giocatore: ${name}`);
-        nameInput.value = "";
-        saveData();
-    }
-
-    function updateScore(player, amount) {
-        gameData.players[player] += amount;
-        const action = amount > 0 ? "+1 birra" : "-1 birra";
-        addLog(`${player}: ${action} (Totale: ${gameData.players[player]})`);
-        saveData();
-    }
-
-    function settleDebt() {
-        const payer = document.getElementById('payerSelect').value;
-        const receiver = document.getElementById('receiverSelect').value;
-
-        if (!payer || !receiver) return alert("Seleziona chi paga e chi riceve.");
-        if (payer === receiver) return alert("Una persona non può pagare una birra a se stessa!");
-
-        gameData.players[payer] += 1;
-        gameData.players[receiver] -= 1;
-
-        addLog(`🍻 ${payer} ha pagato una birra a ${receiver}`);
-        
-        document.getElementById('payerSelect').value = "";
-        document.getElementById('receiverSelect').value = "";
-        
-        saveData();
-    }
-
-    function calcolaSaldi() {
-        let debtors = [];
-        let creditors = [];
-
-        for (const [name, balance] of Object.entries(gameData.players)) {
-            if (balance < 0) debtors.push({ name, amount: -balance });
-            if (balance > 0) creditors.push({ name, amount: balance });
-        }
-
-        let transactions = [];
-        let i = 0; 
-        let j = 0; 
-
-        while (i < debtors.length && j < creditors.length) {
-            let debtor = debtors[i];
-            let creditor = creditors[j];
-            let amountToPay = Math.min(debtor.amount, creditor.amount);
-
-            transactions.push(`<strong>${debtor.name}</strong> deve ${amountToPay} birra/e a <strong>${creditor.name}</strong>`);
-
-            debtor.amount -= amountToPay;
-            creditor.amount -= amountToPay;
-
-            if (debtor.amount === 0) i++;
-            if (creditor.amount === 0) j++;
-        }
-
-        return transactions;
-    }
-
-    function renderUI() {
-        const list = document.getElementById('playersList');
-        list.innerHTML = "";
-        
-        let playerOptions = `<option value="">Seleziona...</option>`;
-
-        for (const [player, score] of Object.entries(gameData.players)) {
-            list.innerHTML += `
-                <div class="player-row">
-                    <span style="font-size: 1.15em;"><strong>${player}</strong>: ${score}</span>
-                    <div>
-                        <button class="btn-circle btn-minus" onclick="updateScore('${player}', -1)">-</button>
-                        <button class="btn-circle btn-plus" onclick="updateScore('${player}', 1)">+</button>
-                    </div>
-                </div>
-            `;
-            
-            playerOptions += `<option value="${player}">${player}</option>`;
-        }
-
-        document.getElementById('payerSelect').innerHTML = playerOptions;
-        document.getElementById('receiverSelect').innerHTML = playerOptions;
-
-        const saldoList = document.getElementById('saldoList');
-        const transazioni = calcolaSaldi();
-        if (transazioni.length === 0) {
-            saldoList.innerHTML = "<p style='margin: 10px 0;'>Nessun debito in sospeso</p>";
-        } else {
-            saldoList.innerHTML = transazioni.map(t => `<div class="saldo-item">${t}</div>`).join('');
-        }
-
-        const logArea = document.getElementById('logList');
-        logArea.innerHTML = gameData.logs.map(log => `<div>${log}</div>`).join('');
-    }
-
-    function toggleSaldi() {
-        const area = document.getElementById('saldoArea');
-        area.style.display = area.style.display === 'block' ? 'none' : 'block';
-    }
-</script>
-
-</body>
-</html>
+            color: var(--
