@@ -8,18 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #050b14;         /* Blu notte profondo */
-            --card: #0d182b;       /* Blu notte per il contenitore */
-            --primary: #dfb12c;    /* Giallo ocra contrastante */
+            --bg: #050b14;         
+            --card: #0d182b;       
+            --primary: #dfb12c;    
             --primary-hover: #c49922;
-            --text: #ffffff;       /* Bianco puro */
-            --text-muted: #b4cce0; /* Azzurro ghiaccio chiaro */
-            --border: #233e66;     /* Bordo più visibile */
-            --row-bg: #112038;     /* Sfondo righe */
-            --danger: #ff6b6b;     /* Rosso brillante */
+            --text: #ffffff;       
+            --text-muted: #b4cce0; 
+            --border: #233e66;     
+            --row-bg: #112038;     
+            --danger: #ff6b6b;     
             --danger-hover: #e05252;
-            --input-bg: #081121;   /* Sfondo input scurissimo */
-            --success: #2bd458;    /* Verde brillante */
+            --input-bg: #081121;   
+            --success: #2bd458;    
         }
         body {
             font-family: 'Inter', sans-serif;
@@ -64,6 +64,7 @@
             background-color: var(--input-bg);
             color: var(--text);
             box-sizing: border-box;
+            width: 100%;
         }
         input:focus, select:focus {
             outline: none;
@@ -71,7 +72,7 @@
         }
         input::placeholder, select::placeholder {
             font-family: 'Inter', sans-serif;
-            color: #8ba4ba;
+            color: #4a6782;
         }
         button {
             background-color: var(--primary);
@@ -90,12 +91,65 @@
         .flex-row {
             display: flex;
             gap: 10px;
+            align-items: stretch;
         }
         .flex-row input, .flex-row select {
             flex: 1;
+            margin: 0;
         }
-        .recent-container {
+        .flex-row button {
+            width: auto;
+            margin: 0;
+            white-space: nowrap;
+        }
+
+        /* Nuove Sezioni Setup */
+        .setup-section {
+            background: var(--row-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
             margin-top: 20px;
+        }
+        .setup-section h2 {
+            font-size: 1.15em;
+            margin-bottom: 5px;
+            color: var(--text);
+            text-shadow: none;
+        }
+        .setup-section p {
+            margin-top: 0;
+            font-size: 0.85em;
+            margin-bottom: 15px;
+        }
+        .setup-divider {
+            text-align: center;
+            margin: 20px 0 0 0;
+            position: relative;
+            z-index: 1;
+        }
+        .setup-divider span {
+            background-color: var(--card);
+            padding: 0 10px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .setup-divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--border);
+            z-index: -1;
+        }
+
+        .recent-container {
+            margin-top: 25px;
             text-align: center;
         }
         .recent-title {
@@ -104,7 +158,7 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         .recent-chips {
             display: flex;
@@ -121,11 +175,13 @@
             border-radius: 20px;
             margin: 0;
             font-weight: 400;
+            width: auto;
         }
         .chip-btn:hover {
             background-color: var(--primary);
             color: #050b14;
         }
+        
         .player-row {
             display: flex;
             justify-content: space-between;
@@ -136,6 +192,27 @@
             border-radius: 10px;
             border: 1px solid var(--border);
         }
+        .player-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-icon-delete {
+            background: transparent;
+            border: none;
+            font-size: 1.1em;
+            cursor: pointer;
+            padding: 0;
+            opacity: 0.6;
+            transition: 0.2s;
+            width: auto;
+            margin: 0;
+        }
+        .btn-icon-delete:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            background: transparent;
+        }
         .btn-circle {
             border-radius: 50%;
             width: 36px;
@@ -144,6 +221,8 @@
             justify-content: center;
             align-items: center;
             font-size: 18px;
+            padding: 0;
+            margin: 0;
         }
         .btn-minus { 
             background-color: rgba(255, 107, 107, 0.15); 
@@ -245,6 +324,7 @@
             font-size: 1.2em;
             padding: 0;
             width: auto;
+            margin: 0;
         }
         .btn-home:hover {
             color: #ffffff;
@@ -257,15 +337,30 @@
 
 <div class="container">
     <div id="setupArea">
-        <h1>Birre al Mare 🍻</h1>
-        <p>Inserisci un ID per accedere ai conteggi condivisi o creane uno nuovo.</p>
-        <div class="flex-row">
-            <input type="text" id="gameIdInput" placeholder="Es: rimini2026" onkeypress="if(event.key === 'Enter') loadGameFromInput()">
-            <button onclick="loadGameFromInput()">Entra</button>
+        <h1 style="margin-bottom: 5px;">Birre al Mare 🍻</h1>
+        
+        <div class="setup-section">
+            <h2>Continua a giocare</h2>
+            <p>Inserisci l'ID di una partita esistente per riprendere il conteggio.</p>
+            <div class="flex-row">
+                <input type="text" id="joinGameId" placeholder="Es: rimini2026" onkeypress="if(event.key === 'Enter') joinExistingGame()">
+                <button id="btnJoin" onclick="joinExistingGame()">Entra</button>
+            </div>
+        </div>
+
+        <div class="setup-divider"><span>OPPURE</span></div>
+
+        <div class="setup-section">
+            <h2>Nuova partita</h2>
+            <p>Crea un nuovo ID univoco per il tuo gruppo di amici.</p>
+            <div class="flex-row">
+                <input type="text" id="newGameId" placeholder="Es: ibiza_estate" onkeypress="if(event.key === 'Enter') createNewGame()">
+                <button id="btnCreate" onclick="createNewGame()">Crea</button>
+            </div>
         </div>
         
         <div class="recent-container" id="recentContainer" style="display: none;">
-            <div class="recent-title">Partite Recenti</div>
+            <div class="recent-title">Ultime Partite Aggiunte</div>
             <div class="recent-chips" id="recentChips"></div>
         </div>
     </div>
@@ -276,7 +371,7 @@
             <h2 id="displayGameId" style="margin: 0; font-size: 1.3em;"></h2>
         </div>
         
-        <div class="flex-row">
+        <div class="flex-row" style="margin-top: 15px;">
             <input type="text" id="newPlayerName" placeholder="Nome Giocatore" onkeypress="if(event.key === 'Enter') addPlayer()">
             <button onclick="addPlayer()">Aggiungi</button>
         </div>
@@ -311,7 +406,7 @@
 </div>
 
 <script>
-    // INSERISCI QUI IL LINK OTTENUTO DA APPS SCRIPT
+    // IL LINK OTTENUTO DA APPS SCRIPT È ORA INSERITO E FUNZIONANTE
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzmTKeWLYnucEIBs_gKHk5ep_9sd_8NVCbe9QojyRhSWeIFk6jelHW-JzyBylnPsT-I/exec"; 
 
     let currentGameId = "";
@@ -328,6 +423,7 @@
         }
     };
 
+    // --- GESTIONE MEMORIA RECENTI ---
     function getRecentGames() {
         const recent = localStorage.getItem('birre_recent_ids');
         return recent ? JSON.parse(recent) : [];
@@ -353,20 +449,91 @@
         
         container.style.display = 'block';
         chipsWrapper.innerHTML = recent.map(id => 
-            `<button class="chip-btn" onclick="loadGameDirectly('${id}')">${id}</button>`
+            `<button class="chip-btn" onclick="joinExistingGameDirectly('${id}')">${id}</button>`
         ).join('');
     }
 
-    function loadGameFromInput() {
-        const id = document.getElementById('gameIdInput').value.trim().toLowerCase();
-        if (!id) return alert("Inserisci un ID valido");
+    // --- VERIFICA ESISTENZA PARTITA SUL DATABASE ---
+    async function checkGameExists(id) {
+        if (!APP_SCRIPT_URL) {
+            // Modalità Locale / Fallback
+            const saved = localStorage.getItem('birre_' + id);
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                return (Object.keys(parsed.players).length > 0 || parsed.logs.length > 0);
+            }
+            return false;
+        }
+
+        try {
+            const response = await fetch(`${APP_SCRIPT_URL}?id=${id}`);
+            const data = await response.json();
+            // Una partita esiste se ha giocatori registrati O ha un log di creazione/eventi
+            return (Object.keys(data.players || {}).length > 0 || (data.logs && data.logs.length > 0));
+        } catch (error) {
+            console.error("Errore durante la verifica dell'ID:", error);
+            return null; // Errore di rete
+        }
+    }
+
+    // --- AZIONI SCHERMATA HOME ---
+    async function joinExistingGame() {
+        const id = document.getElementById('joinGameId').value.trim().toLowerCase();
+        if (!id) return alert("Inserisci l'ID della partita a cui vuoi accedere.");
+        
+        const btn = document.getElementById('btnJoin');
+        btn.innerHTML = "⏳...";
+        btn.disabled = true;
+
+        const exists = await checkGameExists(id);
+        
+        btn.innerHTML = "Entra";
+        btn.disabled = false;
+
+        if (exists === null) return alert("Errore di connessione col server. Riprova.");
+        
+        if (exists === false) {
+            return alert(`Attenzione: La partita "${id}" non esiste. Controlla l'ID o creane uno nuovo in "Nuova Partita".`);
+        }
+
         executeLoad(id);
     }
 
-    function loadGameDirectly(id) {
+    async function joinExistingGameDirectly(id) {
+        // Usato dai bottoncini rapidi (partiamo dal presupposto che esista, per velocità)
         executeLoad(id);
     }
 
+    async function createNewGame() {
+        const id = document.getElementById('newGameId').value.trim().toLowerCase();
+        if (!id) return alert("Inserisci un ID per creare la tua partita.");
+        if (id.length < 3) return alert("Scegli un ID di almeno 3 caratteri.");
+        
+        const btn = document.getElementById('btnCreate');
+        btn.innerHTML = "⏳...";
+        btn.disabled = true;
+
+        const exists = await checkGameExists(id);
+        
+        btn.innerHTML = "Crea";
+        btn.disabled = false;
+
+        if (exists === null) return alert("Errore di connessione col server. Riprova.");
+        
+        if (exists === true) {
+            return alert(`Impossibile creare: L'ID "${id}" è già in uso! Ti preghiamo di scegliere un altro ID.`);
+        }
+
+        // Se arriviamo qui, la partita è davvero nuova e libera
+        executeLoad(id);
+        
+        // Salviamo immediatamente un evento per "bloccare" l'ID sul server
+        gameData = { players: {}, logs: [] };
+        addLog("Partita creata! 🍻");
+        saveData(); 
+    }
+
+    // --- CARICAMENTO INTERFACCIA GIOCO ---
     function executeLoad(id) {
         currentGameId = id;
         saveRecentGame(id);
@@ -374,6 +541,10 @@
         document.getElementById('setupArea').style.display = 'none';
         document.getElementById('gameArea').style.display = 'block';
         document.getElementById('displayGameId').innerText = "ID: " + currentGameId;
+        
+        // Pulizia dei campi input della home
+        document.getElementById('joinGameId').value = "";
+        document.getElementById('newGameId').value = "";
 
         fetchData();
     }
@@ -381,11 +552,11 @@
     function goHome() {
         document.getElementById('gameArea').style.display = 'none';
         document.getElementById('setupArea').style.display = 'block';
-        document.getElementById('gameIdInput').value = "";
         currentGameId = "";
         renderRecentChips();
     }
 
+    // --- GESTIONE DATI SERVER ---
     async function fetchData() {
         if (!APP_SCRIPT_URL) {
             const saved = localStorage.getItem('birre_' + currentGameId);
@@ -398,205 +569,13 @@
         try {
             const response = await fetch(`${APP_SCRIPT_URL}?id=${currentGameId}`);
             const data = await response.json();
-            if (data && data.players) {
-                gameData = data;
+            if (data && (data.players || data.logs)) {
+                gameData = {
+                    players: data.players || {},
+                    logs: data.logs || []
+                };
             } else {
                 gameData = { players: {}, logs: [] };
             }
             renderUI();
         } catch (error) {
-            console.error("Errore:", error);
-            alert("Errore di caricamento dal database.");
-        }
-    }
-
-    async function saveData() {
-        renderUI(); 
-        
-        if (!APP_SCRIPT_URL) {
-            localStorage.setItem('birre_' + currentGameId, JSON.stringify(gameData));
-            return;
-        }
-
-        try {
-            await fetch(APP_SCRIPT_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'text/plain;charset=utf-8',
-                },
-                body: JSON.stringify({
-                    id: currentGameId,
-                    data: gameData
-                })
-            });
-        } catch (error) {
-            console.error("Errore salvataggio:", error);
-            alert("Errore di sincronizzazione col server.");
-        }
-    }
-
-    async function forceSave() {
-        const btn = document.getElementById('btnSave');
-        const originalText = btn.innerHTML;
-        
-        btn.innerHTML = "⏳ Salvataggio...";
-        await saveData();
-        
-        btn.innerHTML = "✅ SALVATO!";
-        btn.classList.add("success");
-        
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.classList.remove("success");
-        }, 2000);
-    }
-    
-    // Funzione per eliminare la partita e svuotare la cache
-    async function deleteGame() {
-        if (!confirm("Sei sicuro di voler eliminare questa partita? Tutti i dati verranno persi e la cache verrà svuotata.")) {
-            return;
-        }
-
-        // Svuota l'oggetto dati
-        gameData = { players: {}, logs: [] };
-
-        // 1. Se il server è configurato, salva lo stato vuoto sovrascrivendo i vecchi dati
-        if (APP_SCRIPT_URL) {
-            try {
-                await fetch(APP_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ id: currentGameId, data: gameData })
-                });
-            } catch (error) {
-                console.error("Errore cancellazione server:", error);
-            }
-        }
-
-        // 2. Rimuovi i dati salvati nella cache locale per questo ID specifico
-        localStorage.removeItem('birre_' + currentGameId);
-
-        // 3. Rimuovi l'ID dalla cronologia delle partite recenti
-        let recent = getRecentGames();
-        recent = recent.filter(item => item !== currentGameId);
-        localStorage.setItem('birre_recent_ids', JSON.stringify(recent));
-
-        // 4. Torna alla home (aggiornerà automaticamente anche i bottoncini)
-        goHome();
-        alert("Partita eliminata e cache svuotata con successo.");
-    }
-
-    function addLog(message) {
-        const date = new Date().toLocaleString('it-IT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
-        gameData.logs.unshift(`[${date}] ${message}`);
-        if (gameData.logs.length > 40) gameData.logs.pop();
-    }
-
-    function addPlayer() {
-        const nameInput = document.getElementById('newPlayerName');
-        const name = nameInput.value.trim();
-        if (!name) return;
-
-        if (gameData.players[name] !== undefined) {
-            return alert("Giocatore già presente!");
-        }
-
-        gameData.players[name] = 0;
-        addLog(`Aggiunto giocatore: ${name}`);
-        nameInput.value = "";
-        saveData();
-    }
-
-    function updateScore(player, amount) {
-        gameData.players[player] += amount;
-        const action = amount > 0 ? "+1 birra" : "-1 birra";
-        addLog(`${player}: ${action} (Totale: ${gameData.players[player]})`);
-        saveData();
-    }
-
-    function settleDebt() {
-        const payer = document.getElementById('payerSelect').value;
-        const receiver = document.getElementById('receiverSelect').value;
-
-        if (!payer || !receiver) return alert("Seleziona chi paga e chi riceve.");
-        if (payer === receiver) return alert("Una persona non può pagare una birra a se stessa!");
-
-        gameData.players[payer] += 1;
-        gameData.players[receiver] -= 1;
-
-        addLog(`🍻 ${payer} ha pagato una birra a ${receiver}`);
-        
-        document.getElementById('payerSelect').value = "";
-        document.getElementById('receiverSelect').value = "";
-        
-        saveData();
-    }
-
-    function calcolaSaldi() {
-        let debtors = [];
-        let creditors = [];
-
-        for (const [name, balance] of Object.entries(gameData.players)) {
-            if (balance < 0) debtors.push({ name, amount: -balance });
-            if (balance > 0) creditors.push({ name, amount: balance });
-        }
-
-        let transactions = [];
-        let i = 0; 
-        let j = 0; 
-
-        while (i < debtors.length && j < creditors.length) {
-            let debtor = debtors[i];
-            let creditor = creditors[j];
-            let amountToPay = Math.min(debtor.amount, creditor.amount);
-
-            transactions.push(`<strong>${debtor.name}</strong> deve ${amountToPay} birra/e a <strong>${creditor.name}</strong>`);
-
-            debtor.amount -= amountToPay;
-            creditor.amount -= amountToPay;
-
-            if (debtor.amount === 0) i++;
-            if (creditor.amount === 0) j++;
-        }
-
-        return transactions;
-    }
-
-    function renderUI() {
-        const list = document.getElementById('playersList');
-        list.innerHTML = "";
-        
-        let playerOptions = `<option value="">Seleziona...</option>`;
-
-        for (const [player, score] of Object.entries(gameData.players)) {
-            list.innerHTML += `
-                <div class="player-row">
-                    <span style="font-size: 1.15em;"><strong>${player}</strong>: ${score}</span>
-                    <div>
-                        <button class="btn-circle btn-minus" onclick="updateScore('${player}', -1)">-</button>
-                        <button class="btn-circle btn-plus" onclick="updateScore('${player}', 1)">+</button>
-                    </div>
-                </div>
-            `;
-            
-            playerOptions += `<option value="${player}">${player}</option>`;
-        }
-
-        document.getElementById('payerSelect').innerHTML = playerOptions;
-        document.getElementById('receiverSelect').innerHTML = playerOptions;
-
-        const saldoList = document.getElementById('saldoList');
-        const transazioni = calcolaSaldi();
-        if (transazioni.length === 0) {
-            saldoList.innerHTML = "<p style='margin: 10px 0;'>Nessun debito in sospeso</p>";
-        } else {
-            saldoList.innerHTML = transazioni.map(t => `<div class="saldo-item">${t}</div>`).join('');
-        }
-
-        const logArea = document.getElementById('logList');
-        logArea.innerHTML = gameData.logs.map(log => `<div>${log}</div>`).join('');
-    }
-</script>
-
-</body>
-</html>
